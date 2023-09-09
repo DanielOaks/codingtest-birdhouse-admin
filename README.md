@@ -1,6 +1,6 @@
-# Nuxt 3 Minimal Starter
+# Shockbyte BirdHouses Admin Panel
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Move aside game servers, we've got a new task! This dashboard shows the status of all birdhouses using Shockbyte's innovative technology.
 
 ## Setup
 
@@ -53,3 +53,7 @@ There's also an issue around the navbar in the footer. It could paginate just th
 ---
 
 Importing the icons has been a bit annoying. I've ended up with [nuxt-svgo](https://nuxt.com/modules/nuxt-svgo) to handle loading svgs as inline elements, as it's by far the easiest way to get things up and running.
+
+---
+
+Having more of a think about the pagination in the footer, there's not any reason to include it on the birdhouse overview page unless it does paginate days and the like there as well. For now I'm going to have it be an element of the main content bit, and have the sidebar take up the entire left of the screen instead.
