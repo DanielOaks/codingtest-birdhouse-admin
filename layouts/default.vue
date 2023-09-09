@@ -27,7 +27,7 @@
     <Body class="bg-sbgrey-100 text-white">
       <div class="flex min-h-screen w-screen flex-col">
         <div
-          class="flex-grow-0 bg-sbgrey-400 py-4 text-center text-lg font-bold"
+          class="flex-grow-0 bg-sbgrey-400 py-5 text-center font-['Inter'] text-xl font-bold tracking-[.02em]"
         >
           Shockbyte BirdHouses Admin Panel
         </div>
@@ -38,6 +38,9 @@
 </template>
 
 <script setup lang="ts">
+import "@fontsource/poppins";
+import "@fontsource/inter/700.css";
+
 useHead({
   titleTemplate: (titleChunk) => {
     return titleChunk

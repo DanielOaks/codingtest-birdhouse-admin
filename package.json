@@ -28,5 +28,9 @@
     "prettier-plugin-tailwindcss": "^0.5.4",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.0.8",
+    "@fontsource/poppins": "^5.0.8"
   }
 }
