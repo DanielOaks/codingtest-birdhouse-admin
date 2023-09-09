@@ -3,10 +3,10 @@
     <h1 class="mb-7 text-2xl font-semibold">Home page</h1>
     <NuxtLink
       to="/birdhouses"
-      class="rounded-lg bg-sbpurple pl-5 pr-4 py-3 flex"
+      class="flex rounded-lg bg-sbpurple py-3 pl-5 pr-4"
     >
       To BirdHouses Overview
-      <IconArrowRight class="inline-block ml-2 h-6" :font-controlled="false" />
+      <IconArrowRight class="ml-2 inline-block h-6" :font-controlled="false" />
     </NuxtLink>
   </div>
 </template>
