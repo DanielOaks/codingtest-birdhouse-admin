@@ -9,7 +9,17 @@ module.exports = {
     "./app.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        sbpurple: "#5051F9",
+        sbgrey: {
+          100: "#131517",
+          400: "#1E1F25",
+        },
+        graphpurple: "#744F99",
+        graphblue: "#0E9CFF",
+      },
+    },
   },
   plugins: [],
 };

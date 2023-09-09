@@ -24,9 +24,15 @@
       <Meta name="theme-color" content="#111111" />
     </Head>
 
-    <Body class="bg-white text-black dark:bg-zinc-900 dark:text-white">
-      <TheHeader />
-      <slot />
+    <Body class="bg-sbgrey-100 text-white">
+      <div class="flex min-h-screen w-screen flex-col">
+        <div
+          class="flex-grow-0 bg-sbgrey-400 py-4 text-center text-lg font-bold"
+        >
+          Shockbyte BirdHouses Admin Panel
+        </div>
+        <slot />
+      </div>
     </Body>
   </div>
 </template>
