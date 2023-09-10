@@ -17,8 +17,9 @@
     <span
       v-if="props.currentItem > 3"
       class="non-active block select-none pr-1"
-      v-text="`...`"
-    />
+    >
+      ...
+    </span>
     <a
       v-if="props.currentItem > 2"
       class="non-active cursor-pointer pl-4 pr-3"
@@ -38,8 +39,9 @@
     <span
       v-if="props.currentItem < props.totalItems - 2"
       class="non-active block select-none pl-1"
-      v-text="`...`"
-    />
+    >
+      ...
+    </span>
     <a
       v-if="props.currentItem < props.totalItems"
       class="non-active cursor-pointer pl-4 pr-3"
@@ -69,16 +71,7 @@ const emit = defineEmits<{
   (e: "selectItem", item: number): void;
 }>();
 
-const props = defineProps({
-  totalItems: {
-    type: Number,
-    default: 1,
-  },
-  currentItem: {
-    type: Number,
-    default: 1,
-  },
-});
+const props = defineProps<{ totalItems: number; currentItem: number }>();
 
 function changeTo(item: number) {
   if (item > 0 && item <= props.totalItems) {

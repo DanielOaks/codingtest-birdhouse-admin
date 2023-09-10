@@ -15,6 +15,9 @@ export default defineNuxtConfig({
 
     // public, exposed client-side
     public: {
+      // note, increasing this value means more occupancy requests on each page load.
+      // to avoid this, disable loadOccupancyDetailsOnList
+      cardsPerPage: 4,
       apiBase: "http://localhost:3000/",
     },
   },
