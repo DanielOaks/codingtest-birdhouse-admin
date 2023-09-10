@@ -6,6 +6,8 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
   const totalItems = ref(0);
   const pageItems = ref(new Map<number, Registration[]>());
   const birdhouseInfo = ref(new Map<string, Registration>());
+  const currentPage = ref(1);
+  const totalPages = ref(0);
 
   async function getPage(api: BhApi, page: number): Promise<Registration[]> {
     let items = pageItems.value.get(page);
@@ -13,10 +15,11 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
     if (items === undefined) {
       console.log(`Calling API to get registrations for page ${page}`);
       const res = await api.registration.getRegistrations({
-        page: 1,
+        page,
         limit: 4,
       });
       totalItems.value = res.meta.totalItems;
+      totalPages.value = res.meta.totalPages;
 
       items = [];
       res.items.forEach((item) => {
@@ -32,7 +35,19 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
     return items;
   }
 
-  return { totalItems, getPage, pageItems, birdhouseInfo };
+  function changeToPage(page: number) {
+    currentPage.value = page;
+  }
+
+  return {
+    totalItems,
+    currentPage,
+    totalPages,
+    getPage,
+    changeToPage,
+    pageItems,
+    birdhouseInfo,
+  };
 });
 
 if (import.meta.hot) {
