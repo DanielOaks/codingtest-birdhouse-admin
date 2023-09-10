@@ -57,3 +57,7 @@ Importing the icons has been a bit annoying. I've ended up with [nuxt-svgo](http
 ---
 
 Having more of a think about the pagination in the footer, there's not any reason to include it on the birdhouse overview page unless it does paginate days and the like there as well. For now I'm going to have it be an element of the main content bit, and have the sidebar take up the entire left of the screen instead.
+
+---
+
+Alrighty, I've now got a very basic js lib ready, which is being made accessible via the birdhouseApi Nuxt plugin here. I'm a bit unsure of how to best integrate Pinia stores into the site, since with the pagination arbitrary pages can be grabbed... Perhaps I could store everything as a map/dict where the key is the page number and the value are the list of entries on that page, but that feels a bit naïve. I'm gonna do some sketches to see if I can work out how I want this to function.
