@@ -304,6 +304,13 @@
   dependencies:
     mime "^3.0.0"
 
+"@danieloaks/codingtest-birdhouse-js@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@danieloaks/codingtest-birdhouse-js/-/codingtest-birdhouse-js-0.0.6.tgz#4c59d01d6356194d271af984971310b370942029"
+  integrity sha512-vNb+FDpR1Zo8BSfmIJIf+KH3RHCNNCkvtQz26FQkyhlqtJcZNJWpyjAskKDNLdlq1BVgwrm9H0pghwcj5CFQbA==
+  dependencies:
+    ky "^1.0.1"
+
 "@esbuild-kit/cjs-loader@^2.4.2":
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/@esbuild-kit/cjs-loader/-/cjs-loader-2.4.2.tgz#cb4dde00fbf744a68c4f20162ea15a8242d0fa54"
@@ -4419,6 +4426,11 @@ kolorist@^1.7.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/kolorist/-/kolorist-1.8.0.tgz#edddbbbc7894bc13302cdf740af6374d4a04743c"
   integrity sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==
+
+ky@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-1.0.1.tgz#3b167f0bf75097240ffc5505e6b4f7b3be8161d0"
+  integrity sha512-UvcwpQO0LOuZwG0Ti3VDo6w57KYt+r4bWEYlNaMt82hgyFtse86QtOGum1RzsZni31FndXQl6NvtDArfunt2JQ==
 
 launch-editor@^2.6.0:
   version "2.6.0"

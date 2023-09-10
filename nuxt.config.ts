@@ -9,4 +9,13 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+
+  runtimeConfig: {
+    // private, only available server-side
+
+    // public, exposed client-side
+    public: {
+      apiBase: "http://localhost:3000/",
+    },
+  },
 });
