@@ -3,58 +3,55 @@
     <IconPrev
       :class="{
         'h-12 cursor-pointer px-1 py-3 text-transparent': true,
-        invisible: props.currentItem <= 1,
+        invisible: currentItem <= 1,
       }"
       :font-controlled="false"
-      @click.prevent="changeTo(props.currentItem - 1)"
+      @click.prevent="changeTo(currentItem - 1)"
     />
     <a
-      v-if="props.currentItem > 1"
+      v-if="currentItem > 1"
       class="non-active cursor-pointer pl-3 pr-4"
       @click.prevent="changeTo(1)"
       v-text="1"
     />
-    <span
-      v-if="props.currentItem > 3"
-      class="non-active block select-none pr-1"
-    >
+    <span v-if="currentItem > 3" class="non-active block select-none pr-1">
       ...
     </span>
     <a
-      v-if="props.currentItem > 2"
+      v-if="currentItem > 2"
       class="non-active cursor-pointer pl-4 pr-3"
-      @click.prevent="changeTo(props.currentItem - 1)"
-      v-text="props.currentItem - 1"
+      @click.prevent="changeTo(currentItem - 1)"
+      v-text="currentItem - 1"
     />
     <span
       class="my-3 block select-none rounded bg-sbpurple px-3.5 py-0.5"
-      v-text="props.currentItem"
+      v-text="currentItem"
     />
     <a
-      v-if="props.currentItem < props.totalItems - 1"
+      v-if="currentItem < totalItems - 1"
       class="non-active cursor-pointer pl-4 pr-3"
-      @click.prevent="changeTo(props.currentItem + 1)"
-      v-text="props.currentItem + 1"
+      @click.prevent="changeTo(currentItem + 1)"
+      v-text="currentItem + 1"
     />
     <span
-      v-if="props.currentItem < props.totalItems - 2"
+      v-if="currentItem < totalItems - 2"
       class="non-active block select-none pl-1"
     >
       ...
     </span>
     <a
-      v-if="props.currentItem < props.totalItems"
+      v-if="currentItem < totalItems"
       class="non-active cursor-pointer pl-4 pr-3"
-      @click.prevent="changeTo(props.totalItems)"
-      v-text="props.totalItems"
+      @click.prevent="changeTo(totalItems)"
+      v-text="totalItems"
     />
     <IconNext
       :class="{
         'h-12 cursor-pointer px-1 py-3 text-transparent': true,
-        invisible: props.currentItem >= props.totalItems,
+        invisible: currentItem >= totalItems,
       }"
       :font-controlled="false"
-      @click.prevent="changeTo(props.currentItem + 1)"
+      @click.prevent="changeTo(currentItem + 1)"
     />
   </div>
 </template>
@@ -72,6 +69,8 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{ totalItems: number; currentItem: number }>();
+
+const { totalItems, currentItem } = toRefs(props);
 
 function changeTo(item: number) {
   if (item > 0 && item <= props.totalItems) {
