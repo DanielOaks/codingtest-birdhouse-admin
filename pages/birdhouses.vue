@@ -37,6 +37,10 @@ const store = useBirdhousesStore();
 const { $bhApi } = useNuxtApp();
 const config = useRuntimeConfig();
 
+useHead({
+  title: "BirdHouse List",
+});
+
 // populate store with info
 if ($bhApi !== undefined) {
   store.setConfig({

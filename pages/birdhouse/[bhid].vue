@@ -35,6 +35,9 @@ if ($bhApi !== undefined) {
     occupancyUpdatesToGrab: config.public.occupancyUpdatesToGrab,
   });
   bh.value = await store.getBirdhouseInfo(route.params.bhid.toString());
-  console.log("bh value is", bh.value.value);
+
+  useHead({
+    title: bh.value.birdhouse?.name,
+  });
 }
 </script>
