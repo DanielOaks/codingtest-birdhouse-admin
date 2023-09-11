@@ -1,10 +1,22 @@
 <template>
   <div class="flex h-full grow flex-col">
-    <div class="flex h-full grow overflow-y-auto">
+    <div class="flex h-full grow">
       <TheSidebar />
-      <div class="flex-grow-1 flex flex-wrap items-start gap-6 p-8">
+      <div
+        class="flex-grow-1 flex flex-wrap items-start gap-6 overflow-y-auto p-8"
+      >
         <template v-for="(bh, i) in pageItems.get(currentPage)" :key="i">
-          <BirdhouseCard :info="bh" />
+          <BirdhouseCard
+            :info="birdhouseInfo.get(bh) || NullRegistration"
+            @click.prevent="
+              birdhouseInfo.get(bh)?.birdhouse
+                ? navigateTo(`/birdhouse/${bh}`)
+                : console.log(
+                    'Prevented navigation to unregistered birdhouse',
+                    bh,
+                  )
+            "
+          />
         </template>
       </div>
     </div>
@@ -20,14 +32,16 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useBirdhousesStore } from "@/stores/birdhouses";
+import { useBirdhousesStore, NullRegistration } from "@/stores/birdhouses";
 const store = useBirdhousesStore();
 const { $bhApi } = useNuxtApp();
 const config = useRuntimeConfig();
 
 // populate store with info
 if ($bhApi !== undefined) {
-  store.setItemsPerPage(config.public.cardsPerPage);
+  store.setConfig({
+    itemsPerPageLimit: config.public.cardsPerPage,
+  });
   await store.getPage($bhApi, 1);
   store.changeToPage(1);
 }

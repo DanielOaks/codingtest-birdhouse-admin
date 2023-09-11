@@ -1,5 +1,10 @@
 <template>
-  <div class="rounded-xl bg-sbgrey-400 p-5">
+  <div
+    :class="{
+      'rounded-xl bg-sbgrey-400 p-5': true,
+      'cursor-pointer': props.info.birdhouse,
+    }"
+  >
     <template v-if="props.info.birdhouse">
       <h2
         class="mb-4 text-xl font-semibold"
@@ -25,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { Registration } from "@danieloaks/codingtest-birdhouse-js/dist/module/registration";
+import { Registration } from "@/stores/birdhouses";
 import IconLocationMarker from "@/assets/icons/location-marker.svg";
 import IconBirdhouse from "@/assets/icons/birdhouse.svg";
 import IconEgg from "@/assets/icons/egg.svg";
