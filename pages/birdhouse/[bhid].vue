@@ -53,6 +53,7 @@
     <div class="flex flex-shrink-0 items-center justify-center bg-sbgrey-400">
       <AppPaginator :total-items="1" :current-item="1" />
     </div>
+    <TheLoadingModal :loading="loading" />
   </div>
 </template>
 
@@ -71,6 +72,8 @@ const route = useRoute();
 const bh = ref(NullRegistration);
 
 const activeTab = ref("overview");
+
+const loading = ref(true);
 
 // only list unique entries
 const occupancyHistory = computed(() => {
@@ -108,6 +111,8 @@ async function populate() {
   useHead({
     title: bh.value.birdhouse?.name,
   });
+
+  loading.value = false;
 }
 
 populate();
