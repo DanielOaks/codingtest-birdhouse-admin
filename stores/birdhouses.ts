@@ -1,6 +1,5 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import BhApi from "@danieloaks/codingtest-birdhouse-js/dist/index";
-import { Registration as BhmRegistration } from "@danieloaks/codingtest-birdhouse-js/dist/module/registration";
 
 export interface OccupancyState {
   id: string;
@@ -36,23 +35,6 @@ export const NullRegistration: Registration = {
     occupancyHistory: [],
   },
 };
-
-function constructRegistration(item: BhmRegistration): Registration {
-  const newRegistration: Registration = {
-    value: item.value,
-  };
-  if (item.birdhouse) {
-    newRegistration.birdhouse = {
-      ubid: item.birdhouse.ubidValue,
-      name: item.birdhouse.name,
-      latitude: item.birdhouse.latitude,
-      longitude: item.birdhouse.longitude,
-      lastOccupationUpdate: new Date(item.birdhouse.lastOccupationUpdate),
-      occupancyHistory: [],
-    };
-  }
-  return newRegistration;
-}
 
 export const useBirdhousesStore = defineStore("birdhouses", () => {
   const itemsPerPage = ref(4);
@@ -112,7 +94,7 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
 
       items = [];
       for (const item of res.items) {
-        const newRegistration = constructRegistration(item);
+        const newRegistration = item as Registration;
 
         if (newRegistration.birdhouse && getCurrentOccupancy) {
           console.log("  Getting occupancy for", item.value);
@@ -150,7 +132,7 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
       console.log(`Calling API to get registration of birdhouse ${bhid}`);
       const res = await api.registration.getRegistration(bhid);
 
-      const newRegistration = constructRegistration(res);
+      const newRegistration = res as Registration;
 
       if (res.birdhouse) {
         birdhouseInfo.value.set(res.value, newRegistration);
