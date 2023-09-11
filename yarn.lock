@@ -304,10 +304,10 @@
   dependencies:
     mime "^3.0.0"
 
-"@danieloaks/codingtest-birdhouse-js@0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@danieloaks/codingtest-birdhouse-js/-/codingtest-birdhouse-js-0.0.10.tgz#679330ba47c7e03b8b20a4288263de6bd14d382b"
-  integrity sha512-1z5cYMmb97dyYXFmufQ6fQgFLOHEJoLcaeD+GarsZK3GDre5r7Kr6qke2JJrBaE912Mo2yF+X7Qj/WI3+9KPXA==
+"@danieloaks/codingtest-birdhouse-js@0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@danieloaks/codingtest-birdhouse-js/-/codingtest-birdhouse-js-0.0.11.tgz#e4f219744c41db96ea680e1e44e1c9f39dbee1f3"
+  integrity sha512-0qSfKMDkD8G/m234Xv9bTOA3aw/XAnUm4RGmDfdvEe3ijjvdSBxyaYKqk/6SCk7g7eFNbWdr/MxNJs4g/cXPeA==
   dependencies:
     ky "^1.0.1"
 

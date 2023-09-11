@@ -27,6 +27,7 @@
         @select-item="changeToPage"
       />
     </div>
+    <TheLoadingModal :loading="loading" />
   </div>
 </template>
 
@@ -37,27 +38,36 @@ const store = useBirdhousesStore();
 const { $bhApi } = useNuxtApp();
 const config = useRuntimeConfig();
 
+const loading = ref(true);
+
 useHead({
   title: "BirdHouse List",
 });
 
 async function changeToPage(newPage: number) {
-  await store.getPage($bhApi, newPage);
+  loading.value = true;
+  await store.getPage(
+    $bhApi,
+    newPage,
+    config.public.loadOccupancyDetailsOnList,
+  );
   store.changeToPage(newPage);
+  loading.value = false;
 }
 
 const { pageItems, birdhouseInfo, currentPage, totalPages } =
   storeToRefs(store);
 
-// populate store with info
+// populate store with initial info
 async function populate() {
   if ($bhApi !== undefined) {
     store.setConfig({
       itemsPerPageLimit: config.public.cardsPerPage,
     });
-    await store.getPage($bhApi, 1);
+    await store.getPage($bhApi, 1, config.public.loadOccupancyDetailsOnList);
     store.changeToPage(1);
   }
+  loading.value = false;
 }
 
 populate();

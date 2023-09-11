@@ -16,6 +16,7 @@
         :longitude="props.info.birdhouse?.longitude"
       />
       <BirdhouseCardOccupancy
+        v-if="$config.public.loadOccupancyDetailsOnList"
         extra-classes=""
         :birds="props.info.birdhouse?.currentOccupancy?.birds"
         :eggs="props.info.birdhouse?.currentOccupancy?.eggs"
