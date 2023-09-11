@@ -1,5 +1,6 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import BhApi from "@danieloaks/codingtest-birdhouse-js/dist/index";
+import { Registration as BhmRegistration } from "@danieloaks/codingtest-birdhouse-js/dist/module/registration";
 
 export interface OccupancyState {
   id: string;
@@ -26,7 +27,31 @@ export interface Registration {
 
 export const NullRegistration: Registration = {
   value: "0",
+  birdhouse: {
+    ubid: "0",
+    name: "Null Birdhouse",
+    latitude: 0,
+    longitude: 0,
+    lastOccupationUpdate: new Date(),
+  },
 };
+
+function constructRegistration(item: BhmRegistration): Registration {
+  const newRegistration: Registration = {
+    value: item.value,
+  };
+  if (item.birdhouse) {
+    newRegistration.birdhouse = {
+      ubid: item.birdhouse.ubidValue,
+      name: item.birdhouse.name,
+      latitude: item.birdhouse.latitude,
+      longitude: item.birdhouse.longitude,
+      lastOccupationUpdate: new Date(item.birdhouse.lastOccupationUpdate),
+      occupancyHistory: [],
+    };
+  }
+  return newRegistration;
+}
 
 export const useBirdhousesStore = defineStore("birdhouses", () => {
   const itemsPerPage = ref(4);
@@ -71,28 +96,16 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
 
     if (items === undefined) {
       console.log(`Calling API to get registrations for page ${page}`);
-      const res = await api.registration.getRegistrations({
+      const res = await api.registration.getRegistrationPage(
         page,
-        limit: itemsPerPage.value,
-      });
+        itemsPerPage.value,
+      );
       totalItems.value = res.meta.totalItems;
       totalPages.value = res.meta.totalPages;
 
       items = [];
       res.items.forEach((item) => {
-        const newRegistration: Registration = {
-          value: item.value,
-        };
-        if (item.birdhouse) {
-          newRegistration.birdhouse = {
-            ubid: item.birdhouse.ubidValue,
-            name: item.birdhouse.name,
-            latitude: item.birdhouse.latitude,
-            longitude: item.birdhouse.longitude,
-            lastOccupationUpdate: new Date(item.birdhouse.lastOccupationUpdate),
-            occupancyHistory: [],
-          };
-        }
+        const newRegistration = constructRegistration(item);
 
         items?.push(item.value);
 
@@ -104,9 +117,22 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
     }
   }
 
-  async function getBirdhouseInfo(bhid: string): Promise<Registration> {
+  async function getBirdhouseInfo(
+    api: BhApi,
+    bhid: string,
+  ): Promise<Registration> {
     if (birdhouseInfo.value.get(bhid) === undefined) {
       await console.log(`Calling API to get registration of birdhouse ${bhid}`);
+      const res = await api.registration.getRegistration(bhid);
+
+      const newRegistration = constructRegistration(res);
+
+      if (res.birdhouse) {
+        birdhouseInfo.value.set(res.value, newRegistration);
+      } else {
+        // no birdhouse registered here, we shouldn't get occupancy below
+        return newRegistration;
+      }
     }
 
     if (!birdhouseInfo.value.get(bhid)?.birdhouse?.occupancyHistory.length) {

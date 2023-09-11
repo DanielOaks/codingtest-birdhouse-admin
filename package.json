@@ -31,7 +31,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@danieloaks/codingtest-birdhouse-js": "0.0.6",
+    "@danieloaks/codingtest-birdhouse-js": "0.0.7",
     "@fontsource/inter": "^5.0.8",
     "@fontsource/poppins": "^5.0.8",
     "@pinia/nuxt": "^0.4.11",

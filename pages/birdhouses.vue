@@ -41,15 +41,6 @@ useHead({
   title: "BirdHouse List",
 });
 
-// populate store with info
-if ($bhApi !== undefined) {
-  store.setConfig({
-    itemsPerPageLimit: config.public.cardsPerPage,
-  });
-  await store.getPage($bhApi, 1);
-  store.changeToPage(1);
-}
-
 async function changeToPage(newPage: number) {
   await store.getPage($bhApi, newPage);
   store.changeToPage(newPage);
@@ -57,4 +48,17 @@ async function changeToPage(newPage: number) {
 
 const { pageItems, birdhouseInfo, currentPage, totalPages } =
   storeToRefs(store);
+
+// populate store with info
+async function populate() {
+  if ($bhApi !== undefined) {
+    store.setConfig({
+      itemsPerPageLimit: config.public.cardsPerPage,
+    });
+    await store.getPage($bhApi, 1);
+    store.changeToPage(1);
+  }
+}
+
+populate();
 </script>
