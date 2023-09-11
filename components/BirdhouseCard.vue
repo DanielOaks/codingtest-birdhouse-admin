@@ -15,12 +15,11 @@
         :latitude="props.info.birdhouse?.latitude"
         :longitude="props.info.birdhouse?.longitude"
       />
-      <div class="flex text-sm">
-        <IconBirdhouse class="mr-2 h-5" :font-controlled="false" />
-        <span v-text="0" />
-        <IconEgg class="ml-3 mr-1.5 h-5" :font-controlled="false" />
-        <span v-text="0" />
-      </div>
+      <BirdhouseCardOccupancy
+        extra-classes=""
+        :birds="props.info.birdhouse?.currentOccupancy?.birds"
+        :eggs="props.info.birdhouse?.currentOccupancy?.eggs"
+      />
     </template>
     <span v-if="!props.info.birdhouse"> Unregistered </span>
   </div>
@@ -28,8 +27,6 @@
 
 <script setup lang="ts">
 import { Registration } from "@/stores/birdhouses";
-import IconBirdhouse from "@/assets/icons/birdhouse.svg";
-import IconEgg from "@/assets/icons/egg.svg";
 
 const props = defineProps<{ info: Registration }>();
 </script>
