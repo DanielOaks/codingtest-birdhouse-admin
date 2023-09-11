@@ -34,15 +34,22 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useBirdhousesStore, NullRegistration } from "@/stores/birdhouses";
+
+// initialise page
+const loading = ref(true);
+
+// metadata
+useHead({
+  title: "BirdHouse List",
+});
+
+// setup store info and functions
 const store = useBirdhousesStore();
 const { $bhApi } = useNuxtApp();
 const config = useRuntimeConfig();
 
-const loading = ref(true);
-
-useHead({
-  title: "BirdHouse List",
-});
+const { pageItems, birdhouseInfo, currentPage, totalPages } =
+  storeToRefs(store);
 
 async function changeToPage(newPage: number) {
   loading.value = true;
@@ -54,9 +61,6 @@ async function changeToPage(newPage: number) {
   store.changeToPage(newPage);
   loading.value = false;
 }
-
-const { pageItems, birdhouseInfo, currentPage, totalPages } =
-  storeToRefs(store);
 
 // populate store with initial info
 async function populate() {

@@ -63,23 +63,26 @@ import {
   NullRegistration,
   OccupancyState,
 } from "@/stores/birdhouses";
-const store = useBirdhousesStore();
-const { $bhApi } = useNuxtApp();
-const config = useRuntimeConfig();
 
-const route = useRoute();
-
-const bh = ref(NullRegistration);
-
-const activeTab = ref("Overview");
-
+// initialise page
 const loading = ref(true);
+
+// setup tabs
+const activeTab = ref("Overview");
 
 function tabButtonClicked(newTab: string) {
   activeTab.value = newTab;
 }
 
-// only list unique entries
+// setup store info and functions
+const store = useBirdhousesStore();
+const { $bhApi } = useNuxtApp();
+const config = useRuntimeConfig();
+const route = useRoute();
+
+const bh = ref(NullRegistration);
+
+// only list unique history entries
 const occupancyHistory = computed(() => {
   const existingDays: string[] = [];
   const items: OccupancyState[] = [];
@@ -98,7 +101,7 @@ const occupancyHistory = computed(() => {
   return items;
 });
 
-// populate store with info
+// populate store with initial info
 async function populate() {
   if ($bhApi !== undefined) {
     store.setConfig({
