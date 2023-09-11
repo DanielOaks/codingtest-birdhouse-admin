@@ -32,7 +32,7 @@
         <AppTab name="Overview" :active-tab="activeTab">
           <div class="mt-1.5">
             <div
-              v-for="(entry, index) in occupancyHistory"
+              v-for="(entry, index) in uniqueOccupancyUpdates"
               :key="index"
               class="mt-4 flex rounded-xl bg-sbgrey-400 p-5"
             >
@@ -51,13 +51,18 @@
       </div>
     </div>
     <div class="flex flex-shrink-0 items-center justify-center bg-sbgrey-400">
-      <AppPaginator :total-items="1" :current-item="1" />
+      <AppPaginator
+        :total-items="thisPageInfo?.totalPages"
+        :current-item="thisPageInfo?.currentPage"
+        @select-item="changeToPage"
+      />
     </div>
     <TheLoadingModal :loading="loading" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import {
   useBirdhousesStore,
   NullRegistration,
@@ -81,38 +86,64 @@ const config = useRuntimeConfig();
 const route = useRoute();
 
 const bh = ref(NullRegistration);
+const { occupancyPageInfo, occupancyHistory } = storeToRefs(store);
 
-// only list unique history entries
-const occupancyHistory = computed(() => {
+const thisPageInfo = computed(() => {
+  return (
+    occupancyPageInfo.value.get(route.params.bhid.toString()) || {
+      totalPages: 1,
+      currentPage: 1,
+    }
+  );
+});
+
+const uniqueOccupancyUpdates = computed(() => {
+  const currentPage =
+    occupancyPageInfo.value.get(route.params.bhid.toString())?.currentPage || 1;
+  const allHistoryStatesOnThisPage =
+    occupancyHistory.value
+      .get(route.params.bhid.toString())
+      ?.get(currentPage) || [];
+
   const existingDays: string[] = [];
   const items: OccupancyState[] = [];
 
-  bh.value.birdhouse?.occupancyHistory.forEach((item) => {
+  for (const item of allHistoryStatesOnThisPage) {
     const thisItemToday = item.createdAt.toLocaleDateString();
 
     if (existingDays.includes(thisItemToday)) {
-      return;
+      continue;
     }
 
     existingDays.push(thisItemToday);
     items.push(item);
-  });
+  }
 
   return items;
 });
+
+async function changeToPage(newPage: number) {
+  loading.value = true;
+  await store.setOccupancyPage($bhApi, route.params.bhid.toString(), newPage);
+  loading.value = false;
+}
 
 // populate store with initial info
 async function populate() {
   if ($bhApi !== undefined) {
     store.setConfig({
-      occupancyUpdatesToGrab: config.public.occupancyUpdatesToGrab,
+      occupancyStatesPerPage: config.public.occupancyUpdatesToGrab,
     });
-    const newBh = await store.getBirdhouseInfo(
+
+    // get base info
+    const newBh = await store.getBaseRegistrationInfo(
       $bhApi,
       route.params.bhid.toString(),
     );
-
     bh.value = newBh;
+
+    // get states
+    await store.setOccupancyPage($bhApi, route.params.bhid.toString(), 1);
   }
 
   useHead({

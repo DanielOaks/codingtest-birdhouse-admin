@@ -1,13 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import BhApi from "@danieloaks/codingtest-birdhouse-js/dist/index";
 
-export interface OccupancyState {
-  id: string;
-  eggs: number;
-  birds: number;
-  createdAt: Date;
-}
-
+// interfaces we expose to the app
 export interface Registration {
   value: string;
   birdhouse?: {
@@ -20,7 +14,6 @@ export interface Registration {
       eggs: number;
       birds: number;
     };
-    occupancyHistory: OccupancyState[];
   };
 }
 
@@ -32,167 +25,224 @@ export const NullRegistration: Registration = {
     latitude: 0,
     longitude: 0,
     lastOccupationUpdate: new Date(),
-    occupancyHistory: [],
   },
 };
 
+export interface OccupancyState {
+  id: string;
+  eggs: number;
+  birds: number;
+  createdAt: Date;
+}
+
+export interface OccupancyPageState {
+  currentPage: number;
+  totalPages: number;
+}
+
 export const useBirdhousesStore = defineStore("birdhouses", () => {
-  const itemsPerPage = ref(4);
-  const totalItems = ref(0);
-  const pageItems = ref(new Map<number, string[]>());
-  const birdhouseInfo = ref(new Map<string, Registration>());
-  const currentPage = ref(1);
-  const totalPages = ref(0);
-  const occupancyUpdatesToGrab = ref(15);
+  // if these values are changed we will need to re-grab data
+  const registrationItemsPerPage = ref(4);
+  const occupancyStatesPerPage = ref(15);
 
   function setConfig(options: {
-    itemsPerPageLimit?: number;
-    occupancyUpdatesToGrab?: number;
+    registrationItemsPerPage?: number;
+    occupancyStatesPerPage?: number;
   }) {
     if (
-      options.itemsPerPageLimit &&
-      options.itemsPerPageLimit !== itemsPerPage.value
+      options.registrationItemsPerPage &&
+      options.registrationItemsPerPage !== registrationItemsPerPage.value
     ) {
-      itemsPerPage.value = options.itemsPerPageLimit;
+      registrationItemsPerPage.value = options.registrationItemsPerPage;
 
       // our existing number of items per page won't match
       console.log("Clearing existing page items");
-      pageItems.value.clear();
+      registrationPageItems.value.clear();
     }
 
     if (
-      options.occupancyUpdatesToGrab &&
-      options.occupancyUpdatesToGrab !== occupancyUpdatesToGrab.value
+      options.occupancyStatesPerPage &&
+      options.occupancyStatesPerPage !== occupancyStatesPerPage.value
     ) {
-      occupancyUpdatesToGrab.value = options.occupancyUpdatesToGrab;
+      occupancyStatesPerPage.value = options.occupancyStatesPerPage;
 
       // clear all occupancy history info
       console.log("Clearing existing occupancy history");
-      birdhouseInfo.value.forEach((info: Registration, _key: string) => {
-        while (info.birdhouse?.occupancyHistory.length) {
-          info.birdhouse?.occupancyHistory.pop();
-        }
-      });
+      occupancyPageInfo.value.clear();
+      occupancyHistory.value.clear();
     }
   }
 
-  async function getPage(
+  // birdhouse registrations
+  const currentRegistrationListPage = ref(1);
+  const totalRegistrationItems = ref(0);
+  const totalRegistrationPages = ref(0);
+  const registrationPageItems = ref(new Map<number, string[]>());
+  const registrationInfo = ref(new Map<string, Registration>());
+
+  async function getCurrentOccupancyForBirdhouse(
+    api: BhApi,
+    ubid: string,
+  ): Promise<{ eggs: number; birds: number } | undefined> {
+    const info = await api.occupancy.getOccupancy(ubid, 1, 1);
+
+    if (info.items.length > 0) {
+      return {
+        eggs: info.items[0].eggs,
+        birds: info.items[0].birds,
+      };
+    }
+  }
+
+  async function setRegistrationPage(
     api: BhApi,
     page: number,
     getCurrentOccupancy: boolean,
-  ): Promise<Registration[]> {
-    let items = pageItems.value.get(page);
-
-    if (items === undefined) {
-      console.log(`Calling API to get registrations for page ${page}`);
-      const res = await api.registration.getRegistrationPage(
-        page,
-        itemsPerPage.value,
-      );
-      totalItems.value = res.meta.totalItems;
-      totalPages.value = res.meta.totalPages;
-
-      items = [];
-      for (const item of res.items) {
-        const newRegistration = item as Registration;
-
-        if (newRegistration.birdhouse && getCurrentOccupancy) {
-          console.log("  Getting occupancy for", item.value);
-          const occupancyRes = await api.occupancy.getOccupancy(
-            newRegistration.birdhouse.ubid,
-            1,
-            occupancyUpdatesToGrab.value,
-          );
-
-          if (occupancyRes.items) {
-            newRegistration.birdhouse.currentOccupancy = {
-              eggs: occupancyRes.items[0].eggs,
-              birds: occupancyRes.items[0].birds,
-            };
-          }
-        }
-
-        items?.push(item.value);
-
-        if (item.birdhouse) {
-          birdhouseInfo.value.set(item.value, newRegistration);
-        }
-      }
-      pageItems.value.set(page, items);
+  ) {
+    // try existing info
+    let items = registrationPageItems.value.get(page);
+    if (items !== undefined) {
+      currentRegistrationListPage.value = page;
+      return;
     }
 
-    return items.map((key) => birdhouseInfo.value.get(key) || NullRegistration);
+    // get new info
+    console.log(`Calling API to get registrations for page ${page}`);
+    const res = await api.registration.getRegistrationPage(
+      page,
+      registrationItemsPerPage.value,
+    );
+    totalRegistrationItems.value = res.meta.totalItems;
+    totalRegistrationPages.value = res.meta.totalPages;
+
+    items = [];
+    for (const item of res.items) {
+      const newRegistration = item as Registration;
+
+      if (newRegistration.birdhouse && getCurrentOccupancy) {
+        console.log(
+          "  Getting current occupancy for",
+          newRegistration.birdhouse.name,
+        );
+        newRegistration.birdhouse.currentOccupancy =
+          await getCurrentOccupancyForBirdhouse(
+            api,
+            newRegistration.birdhouse.ubid,
+          );
+      }
+
+      items?.push(item.value);
+
+      if (item.birdhouse) {
+        registrationInfo.value.set(item.value, newRegistration);
+      }
+    }
+    registrationPageItems.value.set(page, items);
+
+    currentRegistrationListPage.value = page;
   }
 
-  async function getBirdhouseInfo(
+  async function getBaseRegistrationInfo(
     api: BhApi,
     bhid: string,
   ): Promise<Registration> {
-    if (birdhouseInfo.value.get(bhid) === undefined) {
-      console.log(`Calling API to get registration of birdhouse ${bhid}`);
-      const res = await api.registration.getRegistration(bhid);
-
-      const newRegistration = res as Registration;
-
-      if (res.birdhouse) {
-        birdhouseInfo.value.set(res.value, newRegistration);
-      } else {
-        // no birdhouse registered here, we shouldn't get occupancy below
-        return newRegistration;
-      }
+    // try existing info
+    const currentRegistrationInfo = registrationInfo.value.get(bhid);
+    if (currentRegistrationInfo !== undefined) {
+      return currentRegistrationInfo;
     }
 
-    if (!birdhouseInfo.value.get(bhid)?.birdhouse?.occupancyHistory.length) {
-      console.log(`Calling API to get occupancy of birdhouse ${bhid}`);
-      await getOccupancy(api, bhid, 1);
-    }
+    // get new info
+    console.log(`Calling API to get registration of birdhouse ${bhid}`);
+    const res = await api.registration.getRegistration(bhid);
 
-    return birdhouseInfo.value.get(bhid) || NullRegistration;
+    const newRegistration = res as Registration;
+
+    if (res.birdhouse) {
+      registrationInfo.value.set(res.value, newRegistration);
+      return newRegistration;
+    } else {
+      // no birdhouse registered here, we shouldn't get occupancy below
+      return newRegistration;
+    }
   }
 
-  function changeToPage(page: number) {
-    currentPage.value = page;
+  // birdhouse occupancy
+  const occupancyPageInfo = ref(new Map<string, OccupancyPageState>());
+  const occupancyHistory = ref(
+    new Map<string, Map<number, OccupancyState[]>>(),
+  );
+
+  function setCurrentOccupancyInfo(
+    bhid: string,
+    page: number,
+    totalPages: number | undefined,
+  ) {
+    const currentOccupancyInfo: OccupancyPageState =
+      occupancyPageInfo.value.get(bhid) || { currentPage: 0, totalPages: 0 };
+
+    currentOccupancyInfo.currentPage = page;
+    if (totalPages !== undefined) {
+      currentOccupancyInfo.totalPages = totalPages;
+    }
+
+    occupancyPageInfo.value.set(bhid, currentOccupancyInfo);
   }
 
-  async function getOccupancy(api: BhApi, bhid: string, page: number) {
-    const registration: Registration | undefined =
-      birdhouseInfo.value.get(bhid);
+  async function setOccupancyPage(api: BhApi, bhid: string, page: number) {
+    // try existing info
+    let currentOhMap =
+      occupancyHistory.value.get(bhid) || new Map<number, OccupancyState[]>();
+    const items: OccupancyState[] = currentOhMap.get(page) || [];
 
-    if (!registration?.birdhouse) {
-      throw new Error(
-        `Birdhouse ${bhid} does not have a registration grabbed or does not have a birdhouse`,
-      );
+    if (items.length > 0) {
+      setCurrentOccupancyInfo(bhid, page, undefined);
+      // we already have the states for this page, no need to call the API
+      return;
     }
 
-    const items = registration?.birdhouse?.occupancyHistory || [];
+    // get new info
+    console.log(
+      `Calling API to get occupancy of birdhouse ${bhid}, page ${page}`,
+    );
 
-    if (registration.birdhouse !== undefined && items.length === 0) {
-      const res = await api.occupancy.getOccupancy(
-        bhid,
-        page,
-        occupancyUpdatesToGrab.value,
-      );
+    const res = await api.occupancy.getOccupancy(
+      bhid,
+      page,
+      occupancyStatesPerPage.value,
+    );
 
-      res.items.forEach((item) => {
-        const newState: OccupancyState = item;
-        items.push(newState);
-      });
-      registration.birdhouse.occupancyHistory = items;
-      birdhouseInfo.value.set(bhid, registration);
+    for (const item of res.items) {
+      items.push(item);
     }
+
+    // re-grab, just in case the state changed in the meantime
+    currentOhMap =
+      occupancyHistory.value.get(bhid) || new Map<number, OccupancyState[]>();
+
+    currentOhMap.set(page, items);
+    occupancyHistory.value.set(bhid, currentOhMap);
+
+    // now that we have the data, change the page
+    setCurrentOccupancyInfo(bhid, page, res.meta.totalPages);
   }
 
   return {
+    // base
     setConfig,
-    totalItems,
-    currentPage,
-    totalPages,
-    getPage,
-    changeToPage,
-    pageItems,
-    getBirdhouseInfo,
-    getOccupancy,
-    birdhouseInfo,
+
+    // registration
+    currentRegistrationListPage,
+    totalRegistrationPages,
+    registrationPageItems,
+    registrationInfo,
+    setRegistrationPage,
+    getBaseRegistrationInfo,
+
+    // occupancy
+    occupancyPageInfo,
+    occupancyHistory,
+    setOccupancyPage,
   };
 });
 

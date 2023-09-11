@@ -5,11 +5,16 @@
       <div
         class="flex-grow-1 flex flex-wrap items-start gap-6 overflow-y-auto p-8"
       >
-        <template v-for="(bh, i) in pageItems.get(currentPage)" :key="i">
+        <template
+          v-for="(bh, i) in registrationPageItems.get(
+            currentRegistrationListPage,
+          )"
+          :key="i"
+        >
           <BirdhouseCard
-            :info="birdhouseInfo.get(bh) || NullRegistration"
+            :info="registrationInfo.get(bh) || NullRegistration"
             @click.prevent="
-              birdhouseInfo.get(bh)?.birdhouse
+              registrationInfo.get(bh)?.birdhouse
                 ? navigateTo(`/birdhouses/${bh}`)
                 : console.log(
                     'Prevented navigation to unregistered birdhouse',
@@ -22,8 +27,8 @@
     </div>
     <div class="flex flex-shrink-0 items-center justify-center bg-sbgrey-400">
       <AppPaginator
-        :total-items="totalPages"
-        :current-item="currentPage"
+        :total-items="totalRegistrationPages"
+        :current-item="currentRegistrationListPage"
         @select-item="changeToPage"
       />
     </div>
@@ -48,17 +53,20 @@ const store = useBirdhousesStore();
 const { $bhApi } = useNuxtApp();
 const config = useRuntimeConfig();
 
-const { pageItems, birdhouseInfo, currentPage, totalPages } =
-  storeToRefs(store);
+const {
+  currentRegistrationListPage,
+  totalRegistrationPages,
+  registrationPageItems,
+  registrationInfo,
+} = storeToRefs(store);
 
 async function changeToPage(newPage: number) {
   loading.value = true;
-  await store.getPage(
+  await store.setRegistrationPage(
     $bhApi,
     newPage,
     config.public.loadOccupancyDetailsOnList,
   );
-  store.changeToPage(newPage);
   loading.value = false;
 }
 
@@ -66,10 +74,13 @@ async function changeToPage(newPage: number) {
 async function populate() {
   if ($bhApi !== undefined) {
     store.setConfig({
-      itemsPerPageLimit: config.public.cardsPerPage,
+      registrationItemsPerPage: config.public.cardsPerPage,
     });
-    await store.getPage($bhApi, 1, config.public.loadOccupancyDetailsOnList);
-    store.changeToPage(1);
+    await store.setRegistrationPage(
+      $bhApi,
+      1,
+      config.public.loadOccupancyDetailsOnList,
+    );
   }
   loading.value = false;
 }
