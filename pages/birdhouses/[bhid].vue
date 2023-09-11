@@ -30,7 +30,7 @@
           </div>
         </div>
         <AppTab name="Overview" :active-tab="activeTab">
-          <div class="mt-1.5">
+          <div class="mt-6">
             <div
               v-for="(entry, index) in uniqueOccupancyUpdates"
               :key="index"
@@ -47,7 +47,17 @@
             </div>
           </div>
         </AppTab>
-        <AppTab name="Graph" :active-tab="activeTab"> Graph goes here. </AppTab>
+        <AppTab name="Graph" :active-tab="activeTab">
+          <div class="mt-6" style="height: calc(100% - 30px)">
+            <BirdhouseOccupancyChart
+              :states="
+                occupancyHistory
+                  .get(route.params.bhid.toString())
+                  ?.get(thisPageInfo?.currentPage) || []
+              "
+            />
+          </div>
+        </AppTab>
       </div>
     </div>
     <div class="flex flex-shrink-0 items-center justify-center bg-sbgrey-400">

@@ -35,6 +35,10 @@
     "@fontsource/inter": "^5.0.8",
     "@fontsource/poppins": "^5.0.8",
     "@pinia/nuxt": "^0.4.11",
-    "pinia": "^2.1.6"
+    "chart.js": "^4.4.0",
+    "chartjs-adapter-spacetime": "^1.0.1",
+    "pinia": "^2.1.6",
+    "spacetime": "^7.4.7",
+    "vue-chartjs": "^5.2.0"
   }
 }
