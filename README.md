@@ -69,3 +69,11 @@ After some sketching I've come to this as a rough layout:
 - BhOccupancy: Map, each UBID to a map of paginated occupancy details.
 
 I've asked for feedback on the footer pagination item, to see if we are paginating the occupancy details or not. If we are, the above would work!
+
+---
+
+So the footer on the single birdhouse page does paginate the occupancy numbers, hmm. I can make this work, but it may be a bit strange using it on the overview vs on the graph.
+
+On the upside, we are now successfully grabbing occupancy data on the list page. However, it does add a lot of waiting (I'm guessing the API isn't hosted in Australia). Because of that I've had to add a loading modal, and I've also added a way to disable those extra API calls via an environment variable. Ideally we'd be returning the current occupancy figures in the registration API response. With this I think the list page is now feature complete, hooray!
+
+It is time to do a decent cleanup though. Things are a bit messy, especially in the Birdhouses store. I'll try to do that, and allow paginating the occupancy details (right now it's a simple list and doesn't take paging into account), before diving into any other tasks.
