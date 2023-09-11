@@ -5,49 +5,49 @@
       <div
         class="flex-grow-1 flex w-full flex-col items-stretch overflow-y-auto p-8"
       >
-        <div class="rounded-xl bg-sbgrey-400 p-5">
+        <div class="rounded-xl bg-sbgrey-400 p-6">
           <div class="flex justify-between">
             <h2 class="mb-2.5 text-xl font-semibold">
               {{ bh.birdhouse?.name }}
             </h2>
-            <BirdhouseCardLocation
+            <BirdhouseLocationSnippet
               extra-classes="mt-1"
               :latitude="bh.birdhouse?.latitude"
               :longitude="bh.birdhouse?.longitude"
             />
           </div>
-          <div class="-mb-5 flex">
-            <div
-              class="tab-button"
-              :class="activeTab === 'overview' ? 'active' : ''"
-              @click="activeTab = 'overview'"
-            >
-              Overview
-            </div>
-            <div
-              class="tab-button ml-8"
-              :class="activeTab === 'graph' ? 'active' : ''"
-              @click="activeTab = 'graph'"
-            >
-              Graph
-            </div>
-          </div>
-        </div>
-        <div v-if="activeTab === 'overview'" class="mt-1.5">
-          <div
-            v-for="(entry, index) in occupancyHistory"
-            :key="index"
-            class="mt-4 flex rounded-xl bg-sbgrey-400 p-5"
-          >
-            <span class="w-28">{{ entry.createdAt.toLocaleDateString() }}</span>
-            <BirdhouseCardOccupancy
-              extra-classes=""
-              :birds="entry.birds"
-              :eggs="entry.eggs"
+          <div class="-mb-6 flex">
+            <AppTabButton
+              name="Overview"
+              :active-tab="activeTab"
+              @click="tabButtonClicked"
+            />
+            <AppTabButton
+              name="Graph"
+              :active-tab="activeTab"
+              @click="tabButtonClicked"
             />
           </div>
         </div>
-        <div v-if="activeTab === 'graph'">Graph</div>
+        <AppTab name="Overview" :active-tab="activeTab">
+          <div class="mt-1.5">
+            <div
+              v-for="(entry, index) in occupancyHistory"
+              :key="index"
+              class="mt-4 flex rounded-xl bg-sbgrey-400 p-5"
+            >
+              <span class="w-28">{{
+                entry.createdAt.toLocaleDateString()
+              }}</span>
+              <BirdhouseOccupancySnippet
+                extra-classes=""
+                :birds="entry.birds"
+                :eggs="entry.eggs"
+              />
+            </div>
+          </div>
+        </AppTab>
+        <AppTab name="Graph" :active-tab="activeTab"> Graph goes here. </AppTab>
       </div>
     </div>
     <div class="flex flex-shrink-0 items-center justify-center bg-sbgrey-400">
@@ -71,9 +71,13 @@ const route = useRoute();
 
 const bh = ref(NullRegistration);
 
-const activeTab = ref("overview");
+const activeTab = ref("Overview");
 
 const loading = ref(true);
+
+function tabButtonClicked(newTab: string) {
+  activeTab.value = newTab;
+}
 
 // only list unique entries
 const occupancyHistory = computed(() => {
@@ -117,13 +121,3 @@ async function populate() {
 
 populate();
 </script>
-
-<style scoped>
-.tab-button {
-  @apply cursor-pointer py-2.5 text-white opacity-40 transition-all;
-}
-.tab-button:hover,
-.tab-button.active {
-  @apply border-b border-sbpurple py-2.5 text-sbpurple opacity-100;
-}
-</style>

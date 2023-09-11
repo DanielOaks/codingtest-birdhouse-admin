@@ -10,12 +10,12 @@
         class="mb-4 text-xl font-semibold"
         v-text="props.info.birdhouse.name"
       />
-      <BirdhouseCardLocation
+      <BirdhouseLocationSnippet
         extra-classes="mb-2.5"
         :latitude="props.info.birdhouse?.latitude"
         :longitude="props.info.birdhouse?.longitude"
       />
-      <BirdhouseCardOccupancy
+      <BirdhouseOccupancySnippet
         v-if="$config.public.loadOccupancyDetailsOnList"
         extra-classes=""
         :birds="props.info.birdhouse?.currentOccupancy?.birds"

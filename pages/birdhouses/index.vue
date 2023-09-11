@@ -10,7 +10,7 @@
             :info="birdhouseInfo.get(bh) || NullRegistration"
             @click.prevent="
               birdhouseInfo.get(bh)?.birdhouse
-                ? navigateTo(`/birdhouse/${bh}`)
+                ? navigateTo(`/birdhouses/${bh}`)
                 : console.log(
                     'Prevented navigation to unregistered birdhouse',
                     bh,
