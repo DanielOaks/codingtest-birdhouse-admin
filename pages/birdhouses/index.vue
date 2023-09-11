@@ -74,7 +74,7 @@ async function changeToPage(newPage: number) {
 async function populate() {
   if ($bhApi !== undefined) {
     store.setConfig({
-      registrationItemsPerPage: config.public.cardsPerPage,
+      registrationItemsPerPage: config.public.registrationItemsPerPage,
     });
     await store.setRegistrationPage(
       $bhApi,
