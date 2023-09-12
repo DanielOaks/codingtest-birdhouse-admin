@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  server:
+    image: ghcr.io/danieloaks/shockbyte-birdhouse-admin:release
+    container_name: birdhouse_admin
+    # environment:
+    #   - NUXT_PUBLIC_API_BASE=https://example.com
+    restart: always
+    ports:
+      - "3000:3000"
