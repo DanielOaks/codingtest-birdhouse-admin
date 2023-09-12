@@ -60,7 +60,8 @@ const {
   registrationInfo,
 } = storeToRefs(store);
 
-async function changeToPage(newPage: number) {
+async function changeToPage(newPage: number, pushState?: boolean) {
+  // load new information
   loading.value = true;
   await store.setRegistrationPage(
     $bhApi,
@@ -68,6 +69,24 @@ async function changeToPage(newPage: number) {
     config.public.loadOccupancyDetailsOnList,
   );
   loading.value = false;
+
+  // update page url
+  if (pushState === undefined || pushState === true) {
+    useRouter().push({
+      query: {
+        page: newPage,
+      },
+    });
+  }
+}
+
+// respond to page changes from back/forward browser buttons
+if (process.client) {
+  window.addEventListener("popstate", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const newPage = parseInt(urlParams.get("page")?.toString() || "1");
+    changeToPage(newPage, false);
+  });
 }
 
 // populate store with initial info
@@ -76,9 +95,11 @@ async function populate() {
     store.setConfig({
       registrationItemsPerPage: config.public.registrationItemsPerPage,
     });
+
+    const initialPage = parseInt(useRoute().query.page?.toString() || "1");
     await store.setRegistrationPage(
       $bhApi,
-      1,
+      initialPage,
       config.public.loadOccupancyDetailsOnList,
     );
   }
