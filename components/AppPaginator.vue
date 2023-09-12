@@ -73,9 +73,7 @@ const props = defineProps<{ totalItems: number; currentItem: number }>();
 const { totalItems, currentItem } = toRefs(props);
 
 function changeTo(item: number) {
-  if (item > 0 && item <= props.totalItems) {
-    emit("selectItem", item);
-  }
+  emit("selectItem", item);
 }
 </script>
 
