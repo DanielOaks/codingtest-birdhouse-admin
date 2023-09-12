@@ -13,4 +13,8 @@
 
 <script setup lang="ts">
 import IconArrowRight from "@/assets/icons/arrow-right.svg";
+
+useHead({
+  title: "",
+});
 </script>
