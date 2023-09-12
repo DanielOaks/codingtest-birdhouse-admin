@@ -1,4 +1,8 @@
-FROM node:20.5.0-alpine
+# multistage docker, to reduce the final image size
+
+## build image
+#
+FROM node:20.5.0-alpine as build
 
 # destination dir
 RUN mkdir -p /usr/src/nuxt-app
@@ -12,6 +16,14 @@ RUN apk update && apk upgrade
 COPY . /usr/src/nuxt-app/
 RUN yarn install
 RUN yarn build
+
+## main image
+#
+FROM node:20.5.0-alpine as main
+
+RUN mkdir -p /usr/src
+COPY --from=build /usr/src/nuxt-app /usr/src/nuxt-app
+WORKDIR /usr/src/nuxt-app
 
 EXPOSE 3000
 
