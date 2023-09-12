@@ -36,18 +36,29 @@ ChartJS.register(
 );
 
 const chartData = computed(() => {
-  const eggData = props.states.map(function (info) {
-    return {
-      x: info.createdAt.toUTCString(),
-      y: info.eggs,
-    };
-  });
-  const birdData = props.states.map(function (info) {
-    return {
-      x: info.createdAt.toUTCString(),
-      y: info.birds,
-    };
-  });
+  // get all *unique* entries only, since the API can duplicate info.
+  // this speeds up rendering a fair bit and also makes it display cleaner
+  const eggData = [
+    ...new Set(
+      props.states.map((info) => {
+        return JSON.stringify({
+          x: info.createdAt.toUTCString(),
+          y: info.eggs,
+        });
+      }),
+    ),
+  ].map((info) => JSON.parse(info));
+
+  const birdData = [
+    ...new Set(
+      props.states.map((info) => {
+        return JSON.stringify({
+          x: info.createdAt.toUTCString(),
+          y: info.birds,
+        });
+      }),
+    ),
+  ].map((info) => JSON.parse(info));
 
   return {
     datasets: [
@@ -87,8 +98,8 @@ const chartOptions = {
   scales: {
     x: {
       type: "time",
-      // parsing: false,
       ticks: {
+        autoSkip: true,
         maxTicksLimit: 7,
         padding: 8,
       },
@@ -102,6 +113,7 @@ const chartOptions = {
     },
     y: {
       ticks: {
+        autoSkip: true,
         beginAtZero: true,
         padding: 8,
         callback: (value: number) => {
