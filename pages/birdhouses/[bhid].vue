@@ -132,11 +132,25 @@ const uniqueOccupancyUpdates = computed(() => {
   return items;
 });
 
-async function changeToPage(newPage: number) {
+async function changeToPage(newPage: number, pushState?: boolean) {
   loading.value = true;
   await store.setOccupancyPage($bhApi, route.params.bhid.toString(), newPage);
   loading.value = false;
+
+  // update page url
+  if (pushState === undefined || pushState === true) {
+    useRouter().push({
+      query: {
+        page: newPage,
+      },
+    });
+  }
 }
+
+// respond to page changes from back/forward browser buttons
+usePopStatePage((newPage) => {
+  changeToPage(newPage, false);
+});
 
 // populate store with initial info
 async function populate() {
@@ -153,7 +167,12 @@ async function populate() {
     bh.value = newBh;
 
     // get states
-    await store.setOccupancyPage($bhApi, route.params.bhid.toString(), 1);
+    const initialPage = useInitialPageNumber();
+    await store.setOccupancyPage(
+      $bhApi,
+      route.params.bhid.toString(),
+      initialPage,
+    );
   }
 
   useHead({

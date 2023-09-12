@@ -81,13 +81,9 @@ async function changeToPage(newPage: number, pushState?: boolean) {
 }
 
 // respond to page changes from back/forward browser buttons
-if (process.client) {
-  window.addEventListener("popstate", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const newPage = parseInt(urlParams.get("page")?.toString() || "1");
-    changeToPage(newPage, false);
-  });
-}
+usePopStatePage((newPage) => {
+  changeToPage(newPage, false);
+});
 
 // populate store with initial info
 async function populate() {
@@ -96,7 +92,7 @@ async function populate() {
       registrationItemsPerPage: config.public.registrationItemsPerPage,
     });
 
-    const initialPage = parseInt(useRoute().query.page?.toString() || "1");
+    const initialPage = useInitialPageNumber();
     await store.setRegistrationPage(
       $bhApi,
       initialPage,
