@@ -8,10 +8,10 @@ We've got sections about the [Project Design](#project-design) (nice description
 
 You can configure the dashboard through these environment variables:
 
-- `NUXT_PUBLIC_API_BASE`: Base API URL, e.g. `https://example.com`
-- `NUXT_PUBLIC_REGISTRATION_ITEMS_PER_PAGE`: Number of items to display on the birdhouses list.
-- `NUXT_PUBLIC_LOAD_OCCUPANCY_DETAILS_ON_LIST`: If set to `false`, don't load occupancy details on birdhouses list. Since each birdhouse requires a separate API call to retrieve this details, it can improve loading times.
-- `NUXT_PUBLIC_OCCUPANCY_STATES_PER_PAGE`: Number of occupancy states to get from API on each specific birdhouse page.
+- `NUXT_PUBLIC_API_BASE`: Base API URL, e.g. `https://example.com`. **Note: This variable must be set for the app to work.**
+- `NUXT_PUBLIC_REGISTRATION_ITEMS_PER_PAGE`: Number of items to display on the birdhouses list. Default: 4
+- `NUXT_PUBLIC_LOAD_OCCUPANCY_DETAILS_ON_LIST`: If set to `false`, don't load occupancy details on the birdhouses list. Since each birdhouse requires a separate API call to retrieve the current occupancy details, this vastly reduces the number of API calls and can improve loading times.
+- `NUXT_PUBLIC_OCCUPANCY_STATES_PER_PAGE`: Number of occupancy states to get from API on each specific birdhouse page. You should fine-tune this based on your production data, so the occupancy list and graph are readable. Defualt: 10
 
 ## Docker quick start
 
@@ -210,3 +210,11 @@ Now when you go between pages on the birdhouses list, it reflects this in the UR
 I've also added a decent bit of documentation now, which is nice, and setup the whole docker + docker-compose part. Had to use multi-stage images because without doing so the final image was way larger than it should've been (I could potentially reduce the size further by only copying the `.output` folder to the final server, I'll try that if I have space to do so).
 
 Now I'm onto describing the project design and adding docs for the typescript lib that calls the API, hooray!
+
+---
+
+The project design has been documented and I've got some basic docs added for the Typescript lib as well. Finally, we refactored the pagination helper functions out into a composable so it's easier to share that between the list and individual pages.
+
+I'd still like to do the map mode, but I'll do so as a PR so that this repo can be reviewed in the meantime.
+
+Overall I'm really happy with how this project has gone, Nuxt and Tailwind feel super natural. It also feels good to have a public repo that I can point to to illustrate my front-end knowledge.
