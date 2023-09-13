@@ -2,7 +2,7 @@ version: "3"
 
 services:
   server:
-    image: ghcr.io/danieloaks/shockbyte-birdhouse-admin:release
+    image: ghcr.io/danieloaks/codingtest-birdhouse-admin:release
     container_name: birdhouse_admin
     # environment:
     #   - NUXT_PUBLIC_API_BASE=https://example.com

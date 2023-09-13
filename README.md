@@ -1,4 +1,4 @@
-# Shockbyte BirdHouses Admin Panel
+# BirdHouses Admin Panel
 
 This dashboard shows the status of all birdhouses using the innovative Smart BirdHouse technology.
 
@@ -17,25 +17,25 @@ You can configure the dashboard through these environment variables:
 
 You can get the dashboard up and running quickly by using Docker!
 
+### Docker
+
+You can run the prebuilt docker image with this command:
+
+```bash
+docker run -it -e NUXT_PUBLIC_API_BASE=https://example.com -p 3000:3000 ghcr.io/danieloaks/codingtest-birdhouse-admin:release
+```
+
+Just replace `https://example.com` with the real API you want to use, then access the dashboard on port 3000. If running the command locally, at http://localhost:3000
+
 ### Docker compose
 
-You can use the default [docker compose file](./compose.yaml) with this command:
+You can also use the default [docker compose file](./compose.yaml) with this command:
 
 ```bash
 docker compose up
 ```
 
 Change the environment variable `NUXT_PUBLIC_API_BASE` to point towards the real API, run the command, then access the dashboard on port 3000. If running the command locally, at http://localhost:3000
-
-### Docker
-
-You can run the prebuilt docker image with this command:
-
-```bash
-docker run -it -e NUXT_PUBLIC_API_BASE=https://example.com -p 3000:3000 ghcr.io/danieloaks/shockbyte-birdhouse-admin:release
-```
-
-Just replace `https://example.com` with the real API you want to use, then access the dashboard on port 3000. If running the command locally, at http://localhost:3000
 
 ## Development
 
