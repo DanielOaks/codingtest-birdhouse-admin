@@ -22,7 +22,7 @@ RUN yarn build
 FROM node:20.5.0-alpine as main
 
 LABEL maintainer="Daniel Oaks <daniel@danieloaks.net>" \
-  description="This is an admin dashboard for Shockbyte's BirdHouse API"
+  description="This is an admin dashboard for the Smart BirdHouse API"
 
 RUN mkdir -p /usr/src
 COPY --from=build /usr/src/nuxt-app /usr/src/nuxt-app

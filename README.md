@@ -1,6 +1,6 @@
 # Shockbyte BirdHouses Admin Panel
 
-Move aside game servers, we've got a new task! This dashboard shows the status of all birdhouses using Shockbyte's innovative Smart BirdHouse technology.
+This dashboard shows the status of all birdhouses using the innovative Smart BirdHouse technology.
 
 We've got sections about the [Project Design](#project-design) (nice descriptions of how this is organised) and the [Project Log](#project-log) (stream-of-consciousness thoughts while developing this).
 
@@ -115,7 +115,7 @@ flowchart LR
 
 ---
 
-Basically, We interact with the BirdHouse API via the [`@danieloaks/codingtest-birdhouse-js` package](https://github.com/DanielOaks/shockbyte-birdhouse-js), and that library takes a lot of inspiration from Shockbyte's existing [`whmcs-node` package](https://github.com/Shockbyte/whmcs-node).
+Basically, We interact with the BirdHouse API via the [`@danieloaks/codingtest-birdhouse-js` package](https://github.com/DanielOaks/codingtest-birdhouse-js), and that library takes a lot of inspiration from Shockbyte's existing [`whmcs-node` package](https://github.com/Shockbyte/whmcs-node).
 
 This library is exposed via the [birdhouseApi Nuxt plugin](./plugins/birdhouseApi.client.ts), available client-side only.
 
@@ -155,7 +155,7 @@ classDiagram
 This app isn't as nice as it could be, and I'd request a few API changes to improve this.
 
 - `GET /registration` and `GET /registration/{ubid}`: Return the current occupancy details on these API responses. Since the dashboard must display these values, and they aren't provided currently, we need an extra API call for every single displayed registration entry that has a birdhouse.
-- `GET /house/{ubid}/occupancy`: Rather than paginating based on pages, it may make sense to update the design to use some kind of date selector and paginate based on entered dates? This could improve how we display the graph (see [issue #5](https://github.com/DanielOaks/shockbyte-birdhouse-admin/issues/5) for more details). It may also be worth checking the app/s that add data here, since we've seen a number of instances where the same timestamp and occupancy figures are recorded multiple times, with different occupancy state IDs.
+- `GET /house/{ubid}/occupancy`: Rather than paginating based on pages, it may make sense to update the design to use some kind of date selector and paginate based on entered dates? This could improve how we display the graph (see [issue #5](https://github.com/DanielOaks/codingtest-birdhouse-admin/issues/5) for more details). It may also be worth checking the app/s that add data here, since we've seen a number of instances where the same timestamp and occupancy figures are recorded multiple times, with different occupancy state IDs.
 
 ## Project log
 
@@ -165,7 +165,7 @@ This section outlines my thoughts while developing this project. It should give 
 
 On first look this seems to be a pretty simple dashboard, with easy-to-follow designs and an API that suits this use case. My initial thoughts are to create a fairly standard Nuxt site with three pages – Landing, List of birdhouses, and Single birdhouse.
 
-I've put together [This MVP issue](https://github.com/DanielOaks/shockbyte-birdhouse-admin/issues/1) which outlines all the features this site **must** contain. And this [Map mode issue](https://github.com/DanielOaks/shockbyte-birdhouse-admin/issues/2) describing a fancy 'map display' that I think would really suit this project once I've got the base functionality.
+I've put together [This MVP issue](https://github.com/DanielOaks/codingtest-birdhouse-admin/issues/1) which outlines all the features this site **must** contain. And this [Map mode issue](https://github.com/DanielOaks/codingtest-birdhouse-admin/issues/2) describing a fancy 'map display' that I think would really suit this project once I've got the base functionality.
 
 ---
 
