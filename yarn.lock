@@ -304,10 +304,10 @@
   dependencies:
     mime "^3.0.0"
 
-"@danieloaks/codingtest-birdhouse-js@0.0.14":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@danieloaks/codingtest-birdhouse-js/-/codingtest-birdhouse-js-0.0.14.tgz#4920799e4f6512742891f9d364569dd5efa2f3eb"
-  integrity sha512-Q+Zdmsv5EZmyGsjEC1tnxq/A4F4+pOpvgkY2KvLRii3u8YhCW2uBRqz+Q2V1Q6YbnIkgDc6hknL7QvoWvm+bAA==
+"@danieloaks/codingtest-birdhouse-js@0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@danieloaks/codingtest-birdhouse-js/-/codingtest-birdhouse-js-0.0.16.tgz#28e6842330c300a4790039aff82f6be4617f5a74"
+  integrity sha512-/Lm5FF/9pCHby7tZnOeOfOlkfLg98nRfUjiL6MwDy+XeWfOadlDBSMPKFdJ81QellL+vWnZwLib7PUb1CgNHDg==
   dependencies:
     ky "^1.0.1"
 
@@ -7460,6 +7460,7 @@ widest-line@^4.0.1:
     string-width "^5.0.1"
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-7.0.0.tgz"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
