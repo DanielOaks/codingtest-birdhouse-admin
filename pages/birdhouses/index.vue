@@ -3,7 +3,7 @@
     <div class="flex h-full grow">
       <TheSidebar />
       <div
-        class="flex-grow-1 flex flex-wrap items-start gap-6 overflow-y-auto p-8"
+        class="flex-grow-1 flex flex-wrap content-start items-start gap-6 overflow-y-auto p-8"
       >
         <template
           v-for="(bh, i) in registrationPageItems.get(
