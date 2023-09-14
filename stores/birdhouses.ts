@@ -5,7 +5,7 @@ import BhApi from "@danieloaks/codingtest-birdhouse-js/dist/index";
 export interface Registration {
   value: string;
   birdhouse?: {
-    ubid: string;
+    ubidValue: string;
     name: string;
     latitude: number;
     longitude: number;
@@ -20,7 +20,7 @@ export interface Registration {
 export const NullRegistration: Registration = {
   value: "0",
   birdhouse: {
-    ubid: "0",
+    ubidValue: "0",
     name: "Null Birdhouse",
     latitude: 0,
     longitude: 0,
@@ -127,7 +127,7 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
         newRegistration.birdhouse.currentOccupancy =
           await getCurrentOccupancyForBirdhouse(
             api,
-            newRegistration.birdhouse.ubid,
+            newRegistration.birdhouse.ubidValue,
           );
       }
 
