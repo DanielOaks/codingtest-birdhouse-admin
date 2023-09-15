@@ -116,19 +116,30 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
     totalRegistrationPages.value = res.meta.totalPages;
 
     items = [];
+    const allOccupancyCalls = [];
     for (const item of res.items) {
       const newRegistration = item as Registration;
 
       if (newRegistration.birdhouse && getCurrentOccupancy) {
-        console.log(
-          "  Getting current occupancy for",
-          newRegistration.birdhouse.name,
-        );
-        newRegistration.birdhouse.currentOccupancy =
-          await getCurrentOccupancyForBirdhouse(
-            api,
-            newRegistration.birdhouse.ubidValue,
-          );
+        // we add this occupancy call to our list, and then do all of them at
+        //  once below. this improves performance a lot compared to doing them
+        //  one-by-one
+        const currentName = newRegistration.birdhouse.name;
+        const currentID = item.value;
+
+        allOccupancyCalls.push(async (): Promise<boolean> => {
+          console.log("Getting current occupancy for", currentName);
+          const reg = registrationInfo.value.get(currentID);
+          if (reg === undefined || reg.birdhouse === undefined) {
+            return false;
+          }
+          reg.birdhouse.currentOccupancy =
+            await getCurrentOccupancyForBirdhouse(api, newRegistration.value);
+
+          registrationInfo.value.set(currentID, reg);
+
+          return true;
+        });
       }
 
       items?.push(item.value);
@@ -138,6 +149,9 @@ export const useBirdhousesStore = defineStore("birdhouses", () => {
       }
     }
     registrationPageItems.value.set(page, items);
+
+    // perform all the registration calls, if any exist
+    await Promise.all(allOccupancyCalls.map((f) => f()));
 
     currentRegistrationListPage.value = page;
   }
